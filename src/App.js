@@ -4,6 +4,7 @@ import Header from './components/Header';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import AddContact from './components/AddContact';
 
 
 class App extends Component {
@@ -25,7 +26,8 @@ class App extends Component {
       <div className="App">
         <Header branding="Emu's Contacts"/>
         <div className="container">
-         <Contacts />
+          <AddContact></AddContact>
+          <Contacts />
         </div>       
       </div>
      
