@@ -13,6 +13,7 @@ class App extends Component {
 
 
   render() {   
+    // console.log("App.js render();");
 
     return(    
       <Provider>
@@ -20,7 +21,7 @@ class App extends Component {
           <Header branding="Emu's Contacts"/>
           <div className="container">
             <AddContact></AddContact>
-            <Contacts />
+            <Contacts></Contacts>
           </div>       
         </div>
       </Provider>

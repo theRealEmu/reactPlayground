@@ -5,6 +5,7 @@ import { Consumer } from '../context';
 class Contacts extends Component {
  
   render() {       
+    // console.log("Contacts.js render();");
 
     return (
       <Consumer>

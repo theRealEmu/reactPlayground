@@ -1,115 +1,142 @@
-import React, { Component } from 'react';
-import { Consumer } from '../context';
-import uuid from 'uuid';
-import UserDataModel from './UserDataModel';
-
+import React, { Component } from "react";
+import { Consumer } from "../context";
+import uuid from "uuid";
+import UserDataModel from "./UserDataModel";
+import TextInputGroup from "./TextInputGroup";
 
 class AddContact extends Component {
-
   state = {
     firstName: "",
     lastName: "",
     email: "",
-    phone: ""
-  } 
+    phone: "",
+    errors: {}
+  };
 
   //Update state when the Form changes
-  formChange = (e) => {    
-    this.setState({[e.target.name] : e.target.value});
-    // console.log(`formChange(): fired, state: ${this.state}, target.name: ${e.target.name}, target.value: ${e.target.value}`);
-  }
+  formChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
 
   //On submit, build a new Object and send it with dipatch
   formSubmit = (dispatch, e) => {
     e.preventDefault();
-    
+
     const { firstName, lastName, email, phone } = this.state;
 
-    const newContact = new UserDataModel (
+    // Check for Errors
+    if (firstName === "") {
+      this.setState({
+        errors: { firstName: "Please fill in your first Name" }
+      });
+      return;
+    }
+    if (lastName === "") {
+      this.setState({ errors: { lastName: "Please fill in your last Name" } });
+      return;
+    }
+    if (email === "") {
+      this.setState({ errors: { email: "Please fill a valid email address" } });
+      return;
+    }
+    if (phone === "") {
+      this.setState({ errors: { phone: "Honey, we need to call you!" } });
+      return;
+    }
+
+    //Build new Contact Object to send to context.js
+    const newContact = new UserDataModel(
       uuid(),
       firstName,
       lastName,
       email,
-      phone      
+      phone
     );
 
-    dispatch({type: "ADD_CONTACT", payload: newContact});
+    dispatch({ type: "ADD_CONTACT", payload: newContact });
 
-    //Clear Form Fields
-    Array.from(e.target.getElementsByTagName("input")).forEach( input => {     
-      input.value = ""; 
-    }); 
+    //Clear Form Fields (setting this.state {} to empty values)
+    this.setState({
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      errors: {}
+    });
 
-
-    
-    console.log("setState(): Form submitted, but not, hehehe. State:", this.state, e.target);    
-  }
+    console.log(
+      "formSubmit(): this.State(): ",
+      this.state,
+      "e.target: ",
+      e.target
+    );
+  };
 
   render() {
-
-    const { firstName, lastName, email, phone } = this.state;
+    const { firstName, lastName, email, phone, errors } = this.state;
+    // console.log("AddContact.js render(), this.state;", this.state);
 
     return (
       <Consumer>
-        { value => {
+        {value => {
           const { dispatch } = value;
           return (
             <div className="card mb-3">
               <div className="card-header">Add new Contact</div>
               <div className="card-body">
-                <form id="emuForm" onSubmit= {this.formSubmit.bind(this, dispatch)}> 
-                  <div className="form-group">
-                    <label htmlFor="firstName">Vorname:</label>
-                    <input 
-                      type="text" 
-                      name="firstName" 
-                      className="form-control form-control-lg" 
-                      placeholder="Dein Vorname.."
-                      value={firstName}
-                      onChange={this.formChange}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="lastName">Nachname:</label>
-                    <input 
-                      type="text" 
-                      name="lastName" 
-                      className="form-control form-control-lg" 
-                      placeholder="Dein Nachname.."
-                      value={lastName}
-                      onChange={this.formChange}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="email">Email:</label>
-                    <input 
-                      type="text" 
-                      name="email" 
-                      className="form-control form-control-lg" 
-                      placeholder="DeinEmailName@beispieldomain.de"
-                      value={email}
-                      onChange={this.formChange}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="phone">Phone:</label>
-                    <input 
-                      type="text" 
-                      name="phone" 
-                      className="form-control form-control-lg" 
-                      placeholder="+49 170 9592370"
-                      value={phone}
-                      onChange={this.formChange}
-                    />
-                  </div>
-                  <input type="submit" className="btn btn-secondary btn-block" value="Send" />
+                <form
+                  id="emuForm"
+                  onSubmit={this.formSubmit.bind(this, dispatch)}
+                >
+                  <TextInputGroup
+                    label="Vorname"
+                    type="text"
+                    name="firstName"
+                    placeholder="Dein Vorname.."
+                    value={firstName}
+                    onChange={this.formChange}
+                    error={errors.firstName}
+                  />
+                  <TextInputGroup
+                    label="Nachname"
+                    type="text"
+                    name="lastName"
+                    placeholder="Dein Nachname.."
+                    value={lastName}
+                    onChange={this.formChange}
+                    error={errors.lastName}
+                  />
+                  <TextInputGroup
+                    label="Email"
+                    type="email"
+                    name="email"
+                    placeholder="du@deinedomain.de"
+                    value={email}
+                    onChange={this.formChange}
+                    error={errors.email}
+                  />
+                  <TextInputGroup
+                    label="Phone"
+                    type="text"
+                    name="phone"
+                    placeholder="+49 171 95 92 370.."
+                    value={phone}
+                    onChange={this.formChange}
+                    error={errors.phone}
+                  />
+
+                  <input
+                    type="submit"
+                    className="btn btn-secondary btn-block"
+                    value="Send"
+                  />
                 </form>
-              </div>        
+              </div>
             </div>
-          )
+          );
         }}
       </Consumer>
-    ) //End return()
+    ); //End return()
   } //End render()
 }
 

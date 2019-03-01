@@ -31,7 +31,8 @@ class Contact extends Component {
   }
 
   render() {
-
+    // console.log("Contact.js render();");
+    
     const { contact } = this.props;
     const { showContactInfo } = this.state;
 
@@ -40,7 +41,8 @@ class Contact extends Component {
         {value => {
 
           const { dispatch } = value;
-
+          // console.log(value);
+          
           return (
             <div className="card card-body mb-3">
               <h4> {contact.fullName()} 
@@ -54,7 +56,7 @@ class Contact extends Component {
                   <li className="list-group-item"> Phone: {contact.phone} </li>
                 </ul>
               ) : null}            
-          </div>
+            </div>
           );
         }}
       </Consumer>
