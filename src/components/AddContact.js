@@ -64,6 +64,9 @@ class AddContact extends Component {
       errors: {}
     });
 
+    //Redirect to Home (Contacts.js)
+    this.props.history.push("/");
+
     console.log(
       "formSubmit(): this.State(): ",
       this.state,
